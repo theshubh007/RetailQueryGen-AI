@@ -42,12 +42,11 @@ def get_few_shot_db_chain():
 
     # vectorstore = Chroma.from_texts(to_vectorize, embeddings, metadatas=few_shots)
     vectorstore = FAISS.from_texts(to_vectorize, embeddings, metadatas=few_shots)
-    print("flag0")
+
     example_selector = SemanticSimilarityExampleSelector(
         vectorstore=vectorstore,
         k=2,
     )
-    print("flag1")
 
     mysql_prompt = """You are a MySQL expert. Given an input question, first create a syntactically correct MySQL query to run, then look at the results of the query and return the answer to the input question.
     Unless the user specifies in the question a specific number of examples to obtain, query for at most {top_k} results using the LIMIT clause as per MySQL. You can order the results to return the most informative data in the database.
@@ -86,7 +85,6 @@ def get_few_shot_db_chain():
             "top_k",
         ],  # These variables are used in the prefix and suffix
     )
-    print("flag2")
+
     chain = SQLDatabaseChain.from_llm(llm, db, verbose=True, prompt=few_shot_prompt)
-    print("flag3")
     return chain
